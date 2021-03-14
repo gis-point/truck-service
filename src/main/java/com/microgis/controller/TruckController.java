@@ -3,6 +3,8 @@ package com.microgis.controller;
 import com.microgis.controller.dto.TruckDeliveryInfo;
 import com.microgis.service.TruckDeliveryService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,11 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TruckController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TruckController.class);
+
     private final TruckDeliveryService truckDeliveryService;
 
+    /**
+     * Processing delivery information
+     *
+     * @param truckDeliveryInfo information about delivery
+     * @return 200 if everything ok
+     */
     @PostMapping("/deliveryInfo")
     public ResponseEntity<?> deliveryInfo(@RequestBody TruckDeliveryInfo truckDeliveryInfo) {
+        LOGGER.info("Get delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveDeliveryInformation(truckDeliveryInfo);
+        LOGGER.info("Delivery information processed");
         return ResponseEntity.ok().build();
     }
 

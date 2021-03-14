@@ -4,15 +4,25 @@ import com.microgis.controller.dto.TruckDeliveryInfo;
 import com.microgis.persistence.TruckDeliveryRepository;
 import com.microgis.persistence.entity.TruckDelivery;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class TruckDeliveryService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TruckDeliveryService.class);
+
     private final TruckDeliveryRepository truckDeliveryRepository;
 
+    /**
+     * Saving delivery information into database
+     *
+     * @param truckDeliveryInfo delivery information
+     */
     public void saveDeliveryInformation(TruckDeliveryInfo truckDeliveryInfo) {
+        LOGGER.info("Saving delivery information into database");
         TruckDelivery truckDelivery = new TruckDelivery();
         truckDelivery.setLoadNumber(truckDeliveryInfo.getLoadNumber());
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTrailerNumber());
