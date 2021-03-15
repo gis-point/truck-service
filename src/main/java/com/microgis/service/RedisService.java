@@ -3,7 +3,6 @@ package com.microgis.service;
 import com.microgis.config.RedisConfig;
 import com.microgis.controller.dto.Location;
 import com.microgis.controller.dto.MobileCoordinate;
-import com.microgis.persistence.entity.DeviceLightweight;
 import com.microgis.persistence.dto.EventData;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RQueue;
@@ -22,23 +21,20 @@ public class RedisService {
 
     private final RedisConfig redisConfig;
 
+    private final DeviceService deviceService;
+
     /**
      * Add coordinates to redis queue
      *
      * @param mobileCoordinate coordinates which should be added to redis queue
      */
     @SuppressWarnings("java:S3864")
-    public void writeToRedis(MobileCoordinate mobileCoordinate, int driverId) {
-//        DeviceLightweight deviceLightweight = deviceService.findById(mobileCoordinate.getDeviceId(), driverId);
-        String deviceId = "";
-//        if (deviceLightweight != null) {
-//            deviceId = String.valueOf(deviceLightweight.getLegacyDeviceId());
-//        }
+    public void writeToRedis(MobileCoordinate mobileCoordinate) {
+        var deviceLightweight = deviceService.findById(mobileCoordinate.getDeviceId());
+        String deviceId = deviceLightweight != null ? String.valueOf(deviceLightweight.getLegacyDeviceId()) : "";
         LOGGER.info("Post info to redis with values - {}", mobileCoordinate);
         var redissonClient = redisConfig.getClient();
-
         RQueue<EventData> queue = redissonClient.getQueue("RawData");
-        String finalDeviceId = deviceId;
         mobileCoordinate.getLocations().stream()
                 .peek(location -> {
                     if (!location.getIsReal()) {
@@ -48,7 +44,7 @@ public class RedisService {
                 .filter(Location::getIsReal)
                 .map(location -> EventData.builder()
                         .accountID(mobileCoordinate.getAccount())
-                        .deviceID(finalDeviceId)
+                        .deviceID(deviceId)
                         .timestamp(location.getTime() / 1000L)
                         .statusCode(61714)
                         .latitude(location.getLatitude())

@@ -19,11 +19,17 @@ public class TruckDelivery {
 
     private Integer loadNumber;
 
-    private String truck;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "truckId", referencedColumnName = "id")
+    private DeviceLightweight truck;
 
-    private String driver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driverId", referencedColumnName = "id")
+    private Driver driver;
 
     private String trailerNumber;
+
+    private String trailerPlateNumber;
 
     private String addressLineFrom;
 
