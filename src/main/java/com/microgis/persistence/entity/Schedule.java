@@ -2,7 +2,7 @@ package com.microgis.persistence.entity;
 
 
 import com.microgis.util.Constants;
-import com.microgis.util.DateTimeAsTimestampConverter;
+import com.microgis.util.converter.DateTimeAsTimestampConverter;
 import lombok.Data;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;

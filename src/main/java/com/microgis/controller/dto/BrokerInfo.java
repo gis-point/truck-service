@@ -9,16 +9,20 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TruckInfo {
+public class BrokerInfo {
 
     @NotNull
-    private String truckNumber;
+    private String brokerCompany;
 
     @NotNull
-    private String plateNumber;
+    private String brokerAddress;
 
-    private String trailerNumber;
+    @NotNull
+    private String brokerPhone;
 
-    private String trailerPlateNumber;
+    private String brokerPhoneExtension;
+
+    @NotNull
+    private String brokerName;
 
 }

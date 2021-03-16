@@ -2,7 +2,7 @@ package com.microgis.persistence.entity;
 
 
 import com.microgis.persistence.dto.GroupType;
-import com.microgis.util.DateTimeConverter;
+import com.microgis.util.converter.DateTimeConverter;
 import lombok.Data;
 import org.joda.time.DateTime;
 

@@ -1,5 +1,6 @@
-package com.microgis.util;
+package com.microgis.util.converter;
 
+import com.microgis.util.Constants;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

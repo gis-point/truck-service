@@ -1,4 +1,4 @@
-package com.microgis.util;
+package com.microgis.util.converter;
 
 import org.joda.time.DateTime;
 
@@ -13,11 +13,6 @@ public class DateTimeConverter implements AttributeConverter<DateTime, Integer> 
 
     @Override
     public DateTime convertToEntityAttribute(Integer s) {
-        if (s != null) {
-            long misil = s * 1000L;
-            return new DateTime(misil);
-        } else {
-            return new DateTime(0);
-        }
+        return s != null ? new DateTime(s * 1000L) : new DateTime(0);
     }
 }

@@ -2,8 +2,8 @@ package com.microgis.persistence.entity;
 
 import com.microgis.persistence.dto.TimeZoneList;
 import com.microgis.util.Constants;
-import com.microgis.util.DateTimeConverter;
-import com.microgis.util.TimeZoneListConverter;
+import com.microgis.util.converter.DateTimeConverter;
+import com.microgis.util.converter.TimeZoneListConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -27,9 +27,9 @@ public class TruckController {
      * @return 200 if everything ok
      */
     @PostMapping("/deliveryInfo")
-    public ResponseEntity<?> deliveryInfo(@RequestBody TruckDeliveryInfo truckDeliveryInfo) {
+    public ResponseEntity<Object> deliveryInfo(@RequestBody TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Get delivery information - {}", truckDeliveryInfo);
-        truckDeliveryService.saveDeliveryInformation(truckDeliveryInfo);
+        truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
         LOGGER.info("Delivery information processed");
         return ResponseEntity.ok().build();
     }

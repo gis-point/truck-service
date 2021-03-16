@@ -1,8 +1,6 @@
 package com.microgis.service;
 
-import com.microgis.controller.dto.DriverInfo;
-import com.microgis.controller.dto.TruckDeliveryInfo;
-import com.microgis.controller.dto.TruckInfo;
+import com.microgis.controller.dto.*;
 import com.microgis.persistence.entity.DeviceLightweight;
 import com.microgis.persistence.entity.Driver;
 import com.microgis.persistence.entity.TruckDelivery;
@@ -30,24 +28,78 @@ public class TruckDeliveryService {
      *
      * @param truckDeliveryInfo delivery information
      */
-    public void saveDeliveryInformation(TruckDeliveryInfo truckDeliveryInfo) {
+    public void saveOrUpdateDeliveryInformation(TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Saving delivery information into database");
         var truckDelivery = truckDeliveryRepository
-                .findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber()).orElse(new TruckDelivery());
+                .findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
+                .orElse(new TruckDelivery());
         truckDelivery.setLoadNumber(truckDeliveryInfo.getLoadNumber());
-        truckDelivery.setTrailerNumber(truckDeliveryInfo.getTrailerNumber());
-        truckDelivery.setAddressLineFrom(truckDeliveryInfo.getAddressLineFrom());
-        truckDelivery.setCityFrom(truckDeliveryInfo.getCityFrom());
-        truckDelivery.setStateFrom(truckDeliveryInfo.getStateFrom());
-        truckDelivery.setTimeFrom(truckDeliveryInfo.getTimeFrom());
-        truckDelivery.setAddressLineTo(truckDeliveryInfo.getAddressLineTo());
-        truckDelivery.setCityTo(truckDeliveryInfo.getCityTo());
-        truckDelivery.setStateTo(truckDeliveryInfo.getStateTo());
-        truckDelivery.setTimeTo(truckDeliveryInfo.getTimeTo());
+        truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
+        truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
         truckDelivery.setStatus(truckDeliveryInfo.getStatus());
         var deviceLightweight = saveDeviceInformation(truckDeliveryInfo.getTruck());
         var driver = saveDriverInformation(truckDeliveryInfo.getDriver());
+        truckDelivery.setTruck(deviceLightweight);
+        truckDelivery.setDriver(driver);
+        saveAdditionalInformation(truckDeliveryInfo, truckDelivery);
+        saveBrokerInfo(truckDeliveryInfo.getBroker(), truckDelivery);
+        saveInformationFrom(truckDeliveryInfo.getInformationFrom(), truckDelivery);
+        saveInformationTo(truckDeliveryInfo.getInformationTo(), truckDelivery);
         truckDeliveryRepository.save(truckDelivery);
+    }
+
+    /**
+     * Set additional information to entity
+     *
+     * @param truckDeliveryInfo delivery information
+     * @param truckDelivery     entity class
+     */
+    private void saveAdditionalInformation(TruckDeliveryInfo truckDeliveryInfo, TruckDelivery truckDelivery) {
+        truckDelivery.setCargoType(truckDeliveryInfo.getCargoType());
+        truckDelivery.setPallets(truckDeliveryInfo.getPallets());
+        truckDelivery.setWeight(truckDeliveryInfo.getWeight());
+    }
+
+    /**
+     * Set information to entity
+     *
+     * @param infoFrom      information about where from deliver cargo
+     * @param truckDelivery entity class
+     */
+    private void saveInformationFrom(InfoFrom infoFrom, TruckDelivery truckDelivery) {
+        truckDelivery.setAddressLineFrom(infoFrom.getAddressLineFrom());
+        truckDelivery.setCityFrom(infoFrom.getCityFrom());
+        truckDelivery.setStateFrom(infoFrom.getStateFrom());
+        truckDelivery.setTimeFrom(infoFrom.getTimeFrom());
+    }
+
+    /**
+     * Set information to entity
+     *
+     * @param infoTo        information about where to deliver cargo
+     * @param truckDelivery entity class
+     */
+    private void saveInformationTo(InfoTo infoTo, TruckDelivery truckDelivery) {
+        truckDelivery.setAddressLineTo(infoTo.getAddressLineTo());
+        truckDelivery.setCityTo(infoTo.getCityTo());
+        truckDelivery.setStateTo(infoTo.getStateTo());
+        truckDelivery.setTimeTo(infoTo.getTimeTo());
+    }
+
+    /**
+     * Set broker information to entity
+     *
+     * @param broker        broker information
+     * @param truckDelivery entity class
+     */
+    private void saveBrokerInfo(BrokerInfo broker, TruckDelivery truckDelivery) {
+        truckDelivery.setBrokerAddress(broker.getBrokerAddress());
+        truckDelivery.setBrokerName(broker.getBrokerName());
+        truckDelivery.setBrokerCompany(broker.getBrokerCompany());
+        truckDelivery.setBrokerPhone(broker.getBrokerPhone());
+        if (broker.getBrokerPhoneExtension() != null) {
+            truckDelivery.setBrokerPhoneExtension(broker.getBrokerPhoneExtension());
+        }
     }
 
     /**
@@ -59,10 +111,12 @@ public class TruckDeliveryService {
     private DeviceLightweight saveDeviceInformation(TruckInfo truckInfo) {
         var device = deviceService.findDeviceLightweightByLicensePlate(truckInfo.getPlateNumber());
         if (device == null) {
-            LOGGER.info("Device wasn't found licensePlate - {} and truckNumber - {}", truckInfo.getPlateNumber(), truckInfo.getTruckNumber());
+            LOGGER.info("Device wasn't found licensePlate - {} and truckNumber - {}", truckInfo.getPlateNumber(),
+                    truckInfo.getTruckNumber());
             DeviceLightweight deviceLightweight = new DeviceLightweight();
             deviceLightweight.setLicensePlate(truckInfo.getPlateNumber());
             deviceLightweight.setLegacyDeviceId(truckInfo.getTruckNumber());
+            deviceLightweight.setEquipmentType("Mobile");
             deviceService.save(deviceLightweight);
             return deviceLightweight;
         }
@@ -77,14 +131,13 @@ public class TruckDeliveryService {
      * @return driver entity
      */
     private Driver saveDriverInformation(DriverInfo driverInfo) {
-        var driver = driverRepository.findDriverByDisplayName(driverInfo.getName());
+        var driver = driverRepository.findDriverByDisplayNameAndContactPhone(driverInfo.getName(), driverInfo.getPhone());
         if (driver.isEmpty()) {
             LOGGER.info("Driver wasn't found driverName - {}", driverInfo.getName());
             Driver driverEntity = new Driver();
             driverEntity.setDisplayName(driverInfo.getName());
-            if (driverInfo.getPhone() != null) {
-                driverEntity.setContactPhone(driverInfo.getPhone());
-            }
+            driverEntity.setContactPhone(driverInfo.getPhone());
+            driverEntity.setMobile(true);
             if (driverInfo.getEmail() != null) {
                 driverEntity.setContactEmail(driverInfo.getEmail());
             }

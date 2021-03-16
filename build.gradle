@@ -26,7 +26,6 @@ apply plugin: "docker"
 apply plugin: "com.palantir.git-version"
 
 group "com.microgis"
-version gitVersion()
 sourceCompatibility = '11'
 
 repositories {
@@ -46,7 +45,7 @@ dependencies {
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
     compile 'org.redisson:redisson-spring-boot-starter:3.13.6'
-    compile 'joda-time:joda-time:2.10.6'
+    compile 'joda-time:joda-time:2.10.10'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'

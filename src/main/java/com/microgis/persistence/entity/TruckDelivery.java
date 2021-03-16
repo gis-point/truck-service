@@ -19,11 +19,11 @@ public class TruckDelivery {
 
     private Integer loadNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "truckId", referencedColumnName = "id")
     private DeviceLightweight truck;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "driverId", referencedColumnName = "id")
     private Driver driver;
 
@@ -48,5 +48,21 @@ public class TruckDelivery {
     private String timeTo;
 
     private String status;
+
+    private Integer pallets;
+
+    private Integer weight;
+
+    private String cargoType;
+
+    private String brokerCompany;
+
+    private String brokerAddress;
+
+    private String brokerPhone;
+
+    private String brokerPhoneExtension;
+
+    private String brokerName;
 
 }

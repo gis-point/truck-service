@@ -1,6 +1,6 @@
 package com.microgis.config;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -11,10 +11,9 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableCaching
 @Configuration
-@RequiredArgsConstructor
 public class AppConfig {
 
-    private final CacheManager cacheManager;
+    private CacheManager cacheManager;
 
     @Bean
     public CacheManager cacheManager() {
@@ -31,6 +30,11 @@ public class AppConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Autowired
+    public void setCacheManager(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
     }
 
 }

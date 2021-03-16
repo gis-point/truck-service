@@ -4,35 +4,38 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TruckDeliveryInfo {
 
+    @NotNull
     private Integer loadNumber;
 
+    @NotNull
     private TruckInfo truck;
 
+    @NotNull
     private DriverInfo driver;
 
-    private String trailerNumber;
+    @NotNull
+    private BrokerInfo broker;
 
-    private String addressLineFrom;
+    @NotNull
+    private InfoFrom informationFrom;
 
-    private String cityFrom;
+    @NotNull
+    private InfoTo informationTo;
 
-    private String stateFrom;
-
-    private String timeFrom;
-
-    private String addressLineTo;
-
-    private String cityTo;
-
-    private String stateTo;
-
-    private String timeTo;
-
+    @NotNull
     private String status;
+
+    private Integer pallets;
+
+    private Integer weight;
+
+    private String cargoType;
 
 }

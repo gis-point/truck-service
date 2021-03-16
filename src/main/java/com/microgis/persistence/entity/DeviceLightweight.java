@@ -1,6 +1,6 @@
 package com.microgis.persistence.entity;
 
-import com.microgis.util.DateTimeConverter;
+import com.microgis.util.converter.DateTimeConverter;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.joda.time.DateTime;
