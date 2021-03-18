@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class InfoFrom {
 
     @NotNull
-    private String addressLineFrom;
+    private String addressFrom;
 
     @NotNull
     private String cityFrom;

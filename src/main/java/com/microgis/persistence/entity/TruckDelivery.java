@@ -31,7 +31,7 @@ public class TruckDelivery {
 
     private String trailerPlateNumber;
 
-    private String addressLineFrom;
+    private String addressFrom;
 
     private String cityFrom;
 
@@ -39,7 +39,7 @@ public class TruckDelivery {
 
     private String timeFrom;
 
-    private String addressLineTo;
+    private String addressTo;
 
     private String cityTo;
 

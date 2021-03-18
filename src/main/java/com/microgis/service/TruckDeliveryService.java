@@ -4,7 +4,6 @@ import com.microgis.controller.dto.*;
 import com.microgis.persistence.entity.DeviceLightweight;
 import com.microgis.persistence.entity.Driver;
 import com.microgis.persistence.entity.TruckDelivery;
-import com.microgis.persistence.repository.DriverRepository;
 import com.microgis.persistence.repository.TruckDeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ public class TruckDeliveryService {
 
     private final DeviceService deviceService;
 
-    private final DriverRepository driverRepository;
+    private final DriverService driverService;
 
     /**
      * Saving delivery information into database
@@ -48,6 +47,17 @@ public class TruckDeliveryService {
         truckDeliveryRepository.save(truckDelivery);
     }
 
+    public DeliveryResponse getDeliveryResponse(Integer loadNumber) {
+        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoadNumber(loadNumber).orElse(null);
+        if (truckDelivery != null) {
+            LOGGER.info("Delivery information found for loadNumber - {}", loadNumber);
+            DeliveryResponse deliveryResponse = new DeliveryResponse();
+            return deliveryResponse;
+        }
+        LOGGER.info("Delivery information was not found for loadNumber - {}", loadNumber);
+        return null;
+    }
+
     /**
      * Set additional information to entity
      *
@@ -67,7 +77,7 @@ public class TruckDeliveryService {
      * @param truckDelivery entity class
      */
     private void saveInformationFrom(InfoFrom infoFrom, TruckDelivery truckDelivery) {
-        truckDelivery.setAddressLineFrom(infoFrom.getAddressLineFrom());
+        truckDelivery.setAddressFrom(infoFrom.getAddressFrom());
         truckDelivery.setCityFrom(infoFrom.getCityFrom());
         truckDelivery.setStateFrom(infoFrom.getStateFrom());
         truckDelivery.setTimeFrom(infoFrom.getTimeFrom());
@@ -80,7 +90,7 @@ public class TruckDeliveryService {
      * @param truckDelivery entity class
      */
     private void saveInformationTo(InfoTo infoTo, TruckDelivery truckDelivery) {
-        truckDelivery.setAddressLineTo(infoTo.getAddressLineTo());
+        truckDelivery.setAddressTo(infoTo.getAddressTo());
         truckDelivery.setCityTo(infoTo.getCityTo());
         truckDelivery.setStateTo(infoTo.getStateTo());
         truckDelivery.setTimeTo(infoTo.getTimeTo());
@@ -131,8 +141,8 @@ public class TruckDeliveryService {
      * @return driver entity
      */
     private Driver saveDriverInformation(DriverInfo driverInfo) {
-        var driver = driverRepository.findDriverByDisplayNameAndContactPhone(driverInfo.getName(), driverInfo.getPhone());
-        if (driver.isEmpty()) {
+        var driver = driverService.findDriverByDisplayNameAndContactPhone(driverInfo.getName(), driverInfo.getPhone());
+        if (driver == null) {
             LOGGER.info("Driver wasn't found driverName - {}", driverInfo.getName());
             Driver driverEntity = new Driver();
             driverEntity.setDisplayName(driverInfo.getName());
@@ -141,11 +151,11 @@ public class TruckDeliveryService {
             if (driverInfo.getEmail() != null) {
                 driverEntity.setContactEmail(driverInfo.getEmail());
             }
-            driverRepository.save(driverEntity);
+            driverService.save(driverEntity);
             return driverEntity;
         }
-        LOGGER.info("Driver found deviceId - {}", driver.get().getId());
-        return driver.get();
+        LOGGER.info("Driver found deviceId - {}", driver.getId());
+        return driver;
     }
 
 }

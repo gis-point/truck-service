@@ -28,7 +28,7 @@ public class RedisService {
      *
      * @param mobileCoordinate coordinates which should be added to redis queue
      */
-    @SuppressWarnings("java:S3864")
+    @SuppressWarnings({"java:S3864", "java:S5411"})
     public void writeToRedis(MobileCoordinate mobileCoordinate) {
         var deviceLightweight = deviceService.findById(mobileCoordinate.getDeviceId());
         String deviceId = deviceLightweight != null ? String.valueOf(deviceLightweight.getLegacyDeviceId()) : "";
