@@ -23,4 +23,7 @@ public class InfoTo {
     @NotNull
     private String timeTo;
 
+    @NotNull
+    private String zipcodeTo;
+
 }

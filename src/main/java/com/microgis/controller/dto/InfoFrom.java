@@ -23,4 +23,7 @@ public class InfoFrom {
     @NotNull
     private String timeFrom;
 
+    @NotNull
+    private String zipcodeFrom;
+
 }

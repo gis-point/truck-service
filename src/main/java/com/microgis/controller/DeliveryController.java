@@ -26,10 +26,7 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponse> getDeliveryInformation(@PathVariable("loadNumber") Integer loadNumber) {
         LOGGER.info("Get delivery information for loadNumber - {}", loadNumber);
         var deliveryInfo = truckDeliveryService.getDeliveryResponse(loadNumber);
-        if (deliveryInfo == null) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(deliveryInfo);
+        return deliveryInfo == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(deliveryInfo);
     }
 
 }

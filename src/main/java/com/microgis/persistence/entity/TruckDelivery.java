@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -37,7 +38,9 @@ public class TruckDelivery {
 
     private String stateFrom;
 
-    private String timeFrom;
+    private Timestamp timeFrom;
+
+    private String zipcodeFrom;
 
     private String addressTo;
 
@@ -45,7 +48,9 @@ public class TruckDelivery {
 
     private String stateTo;
 
-    private String timeTo;
+    private Timestamp timeTo;
+
+    private String zipcodeTo;
 
     private String status;
 
