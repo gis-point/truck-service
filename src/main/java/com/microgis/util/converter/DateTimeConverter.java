@@ -7,12 +7,13 @@ import javax.persistence.AttributeConverter;
 public class DateTimeConverter implements AttributeConverter<DateTime, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(DateTime zone) {
-        return zone != null ? (int) (zone.getMillis() / 1000L) : 0;
+    public Integer convertToDatabaseColumn(DateTime dateTime) {
+        return dateTime != null ? (int) (dateTime.getMillis() / 1000L) : 0;
     }
 
     @Override
-    public DateTime convertToEntityAttribute(Integer s) {
-        return s != null ? new DateTime(s * 1000L) : new DateTime(0);
+    public DateTime convertToEntityAttribute(Integer time) {
+        return time != null ? new DateTime(time * 1000L) : new DateTime(0);
     }
+
 }
