@@ -1,5 +1,6 @@
 package com.microgis.persistence.entity;
 
+import com.microgis.persistence.dto.DeliveryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ public class TruckDelivery {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private Integer loadNumber;
+    private String loadNumber;
+
+    private String pickupNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "truckId", referencedColumnName = "id")
@@ -42,6 +45,8 @@ public class TruckDelivery {
 
     private String zipcodeFrom;
 
+    private String companyFrom;
+
     private String addressTo;
 
     private String cityTo;
@@ -52,7 +57,10 @@ public class TruckDelivery {
 
     private String zipcodeTo;
 
-    private String status;
+    private String companyTo;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
 
     private Integer pallets;
 
@@ -66,7 +74,7 @@ public class TruckDelivery {
 
     private String brokerPhone;
 
-    private String brokerPhoneExtension;
+    private Integer brokerPhoneExtension;
 
     private String brokerName;
 
