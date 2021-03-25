@@ -1,9 +1,7 @@
 package com.microgis.persistence.entity;
 
 import com.microgis.persistence.dto.DeliveryStatus;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,8 +9,6 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "TRUCK_DELIVERY_INFO")
-@NoArgsConstructor
-@AllArgsConstructor
 public class TruckDelivery {
 
     @Id

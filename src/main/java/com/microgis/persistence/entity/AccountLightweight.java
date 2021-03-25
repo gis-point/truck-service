@@ -4,9 +4,7 @@ import com.microgis.persistence.dto.TimeZoneList;
 import com.microgis.util.Constants;
 import com.microgis.util.converter.DateTimeConverter;
 import com.microgis.util.converter.TimeZoneListConverter;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,8 +15,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "Account")
-@NoArgsConstructor
-@AllArgsConstructor
 public class AccountLightweight {
 
     @Column(name = "isActive")

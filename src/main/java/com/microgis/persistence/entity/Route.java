@@ -4,7 +4,6 @@ import com.microgis.persistence.dto.RouteVehicleType;
 import com.microgis.util.Constants;
 import com.microgis.util.converter.DateTimeAsTimestampConverter;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,7 +15,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "MG_ROUTE")
-@NoArgsConstructor
 public class Route {
 
     @Id

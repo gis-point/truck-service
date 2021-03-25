@@ -1,21 +1,18 @@
 package com.microgis.persistence.entity;
 
-
 import com.microgis.persistence.dto.Status;
 import com.microgis.util.Constants;
 import com.microgis.util.converter.DateTimeAsTimestampConverter;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "Driver")
-@NoArgsConstructor
-@Data
 public class Driver {
 
     @Id

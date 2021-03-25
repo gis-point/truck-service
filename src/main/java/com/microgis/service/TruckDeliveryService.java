@@ -40,8 +40,7 @@ public class TruckDeliveryService {
      */
     public void saveOrUpdateDeliveryInformation(TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Saving delivery information into database");
-        var truckDelivery = truckDeliveryRepository
-                .findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
+        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
                 .orElse(new TruckDelivery());
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
         truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
@@ -64,13 +63,11 @@ public class TruckDeliveryService {
      * @return delivery information for response
      */
     public DeliveryResponse getDeliveryResponse(String username) {
-        var truckDelivery = truckDeliveryRepository
-                .findTruckDeliveryByUserNameAndStatus(username, DeliveryStatus.CREATED)
+        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByUserNameAndStatus(username, DeliveryStatus.CREATED)
                 .orElse(null);
         if (truckDelivery != null) {
             LOGGER.info("Delivery information found for user - {}", username);
             DeliveryResponse deliveryResponse = new DeliveryResponse();
-            deliveryResponse.setDeliveryId(truckDelivery.getId());
             deliveryResponse.setDeviceId(truckDelivery.getTruck().getId());
             deliveryResponse.setDriverName(truckDelivery.getDriver().getDisplayName());
             formatAddressFromResponse(truckDelivery, deliveryResponse);
@@ -91,9 +88,6 @@ public class TruckDeliveryService {
     private void formatAdditionalInformationResponse(TruckDelivery truckDelivery, DeliveryResponse deliveryResponse) {
         if (truckDelivery.getCargoType() != null) {
             deliveryResponse.setCargoType(truckDelivery.getCargoType());
-        }
-        if (truckDelivery.getPallets() != null) {
-            deliveryResponse.setPallets(truckDelivery.getPallets());
         }
         if (truckDelivery.getWeight() != null) {
             deliveryResponse.setWeight(truckDelivery.getWeight());
@@ -218,6 +212,7 @@ public class TruckDeliveryService {
             deviceLightweight.setLicensePlate(truckInfo.getPlateNumber());
             deviceLightweight.setLegacyDeviceId(String.valueOf(truckInfo.getTruckNumber()));
             deviceLightweight.setEquipmentType("Mobile");
+            deviceLightweight.setRecordEvent(true);
             deviceService.save(deviceLightweight);
             return deviceLightweight;
         }
@@ -253,7 +248,7 @@ public class TruckDeliveryService {
         return driver;
     }
 
-    private AccountLightweight getAccount(){
+    private AccountLightweight getAccount() {
         return accountRepository.getOne(1);
     }
 }
