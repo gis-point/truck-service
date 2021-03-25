@@ -1,9 +1,12 @@
 package com.microgis.service;
 
 import com.microgis.controller.dto.*;
+import com.microgis.persistence.dto.DeliveryStatus;
+import com.microgis.persistence.entity.AccountLightweight;
 import com.microgis.persistence.entity.DeviceLightweight;
 import com.microgis.persistence.entity.Driver;
 import com.microgis.persistence.entity.TruckDelivery;
+import com.microgis.persistence.repository.AccountRepository;
 import com.microgis.persistence.repository.TruckDeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +27,8 @@ public class TruckDeliveryService {
 
     private final TruckDeliveryRepository truckDeliveryRepository;
 
+    private final AccountRepository accountRepository;
+
     private final DeviceService deviceService;
 
     private final DriverService driverService;
@@ -38,39 +43,42 @@ public class TruckDeliveryService {
         var truckDelivery = truckDeliveryRepository
                 .findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
                 .orElse(new TruckDelivery());
-        truckDelivery.setLoadNumber(truckDeliveryInfo.getLoadNumber());
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
         truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
-        truckDelivery.setStatus(truckDeliveryInfo.getStatus());
+        truckDelivery.setStatus(DeliveryStatus.getDeliveryStatus(truckDeliveryInfo.getStatus()));
         var deviceLightweight = saveDeviceInformation(truckDeliveryInfo.getTruck());
         var driver = saveDriverInformation(truckDeliveryInfo.getDriver());
         truckDelivery.setTruck(deviceLightweight);
         truckDelivery.setDriver(driver);
         saveAdditionalInformation(truckDeliveryInfo, truckDelivery);
         saveBrokerInfo(truckDeliveryInfo.getBroker(), truckDelivery);
-        saveInformationFrom(truckDeliveryInfo.getInformationFrom(), truckDelivery);
-        saveInformationTo(truckDeliveryInfo.getInformationTo(), truckDelivery);
+        saveInformationFrom(truckDeliveryInfo.getAddressLineFrom(), truckDelivery);
+        saveInformationTo(truckDeliveryInfo.getAddressLineTo(), truckDelivery);
         truckDeliveryRepository.save(truckDelivery);
     }
 
     /**
      * Format response with delivery information for driver
      *
-     * @param loadNumber delivery number
+     * @param username driver name
      * @return delivery information for response
      */
-    public DeliveryResponse getDeliveryResponse(Integer loadNumber) {
-        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoadNumber(loadNumber).orElse(null);
+    public DeliveryResponse getDeliveryResponse(String username) {
+        var truckDelivery = truckDeliveryRepository
+                .findTruckDeliveryByUserNameAndStatus(username, DeliveryStatus.CREATED)
+                .orElse(null);
         if (truckDelivery != null) {
-            LOGGER.info("Delivery information found for loadNumber - {}", loadNumber);
+            LOGGER.info("Delivery information found for user - {}", username);
             DeliveryResponse deliveryResponse = new DeliveryResponse();
+            deliveryResponse.setDeliveryId(truckDelivery.getId());
+            deliveryResponse.setDeviceId(truckDelivery.getTruck().getId());
             deliveryResponse.setDriverName(truckDelivery.getDriver().getDisplayName());
             formatAddressFromResponse(truckDelivery, deliveryResponse);
             formatAddressToResponse(truckDelivery, deliveryResponse);
             formatAdditionalInformationResponse(truckDelivery, deliveryResponse);
             return deliveryResponse;
         }
-        LOGGER.info("Delivery information was not found for loadNumber - {}", loadNumber);
+        LOGGER.info("Delivery information was not found for user - {}", username);
         return null;
     }
 
@@ -99,13 +107,13 @@ public class TruckDeliveryService {
      * @param deliveryResponse dto class
      */
     private void formatAddressFromResponse(TruckDelivery truckDelivery, DeliveryResponse deliveryResponse) {
-        InfoFrom infoFrom = new InfoFrom();
-        infoFrom.setAddressFrom(truckDelivery.getAddressFrom());
-        infoFrom.setCityFrom(truckDelivery.getCityFrom());
-        infoFrom.setStateFrom(truckDelivery.getStateFrom());
-        infoFrom.setTimeFrom(truckDelivery.getTimeFrom().toString());
-        infoFrom.setZipcodeFrom(truckDelivery.getZipcodeFrom());
-        deliveryResponse.setInfoFrom(infoFrom);
+        AddressLine addressLine = new AddressLine();
+        addressLine.setAddress(truckDelivery.getAddressFrom());
+        addressLine.setCity(truckDelivery.getCityFrom());
+        addressLine.setState(truckDelivery.getStateFrom());
+        addressLine.setTime(truckDelivery.getTimeFrom().toString());
+        addressLine.setZipcode(truckDelivery.getZipcodeFrom());
+        deliveryResponse.setAddressLine(addressLine);
     }
 
     /**
@@ -115,13 +123,13 @@ public class TruckDeliveryService {
      * @param deliveryResponse dto class
      */
     private void formatAddressToResponse(TruckDelivery truckDelivery, DeliveryResponse deliveryResponse) {
-        InfoTo infoTo = new InfoTo();
-        infoTo.setAddressTo(truckDelivery.getAddressTo());
-        infoTo.setCityTo(truckDelivery.getCityTo());
-        infoTo.setStateTo(truckDelivery.getStateTo());
-        infoTo.setTimeTo(truckDelivery.getTimeTo().toString());
-        infoTo.setZipcodeTo(truckDelivery.getZipcodeTo());
-        deliveryResponse.setInfoTo(infoTo);
+        AddressLine addressLineTo = new AddressLine();
+        addressLineTo.setAddress(truckDelivery.getAddressTo());
+        addressLineTo.setCity(truckDelivery.getCityTo());
+        addressLineTo.setState(truckDelivery.getStateTo());
+        addressLineTo.setTime(truckDelivery.getTimeTo().toString());
+        addressLineTo.setZipcode(truckDelivery.getZipcodeTo());
+        deliveryResponse.setAddressLineTo(addressLineTo);
     }
 
     /**
@@ -131,6 +139,8 @@ public class TruckDeliveryService {
      * @param truckDelivery     entity class
      */
     private void saveAdditionalInformation(TruckDeliveryInfo truckDeliveryInfo, TruckDelivery truckDelivery) {
+        truckDelivery.setLoadNumber(truckDeliveryInfo.getLoadNumber());
+        truckDelivery.setPickupNumber(truckDeliveryInfo.getPickupNumber());
         truckDelivery.setCargoType(truckDeliveryInfo.getCargoType());
         truckDelivery.setPallets(truckDeliveryInfo.getPallets());
         truckDelivery.setWeight(truckDeliveryInfo.getWeight());
@@ -139,37 +149,39 @@ public class TruckDeliveryService {
     /**
      * Set information to entity
      *
-     * @param infoFrom      information about where from deliver cargo
-     * @param truckDelivery entity class
+     * @param addressLineFrom information about where from deliver cargo
+     * @param truckDelivery   entity class
      */
-    private void saveInformationFrom(InfoFrom infoFrom, TruckDelivery truckDelivery) {
-        truckDelivery.setAddressFrom(infoFrom.getAddressFrom());
-        truckDelivery.setCityFrom(infoFrom.getCityFrom());
-        truckDelivery.setStateFrom(infoFrom.getStateFrom());
+    private void saveInformationFrom(AddressLine addressLineFrom, TruckDelivery truckDelivery) {
+        truckDelivery.setAddressFrom(addressLineFrom.getAddress());
+        truckDelivery.setCityFrom(addressLineFrom.getCity());
+        truckDelivery.setStateFrom(addressLineFrom.getState());
+        truckDelivery.setCompanyFrom(addressLineFrom.getCompany());
         try {
-            truckDelivery.setTimeFrom(new Timestamp(dateFormat.parse(infoFrom.getTimeFrom()).getTime()));
+            truckDelivery.setTimeFrom(new Timestamp(dateFormat.parse(addressLineFrom.getTime()).getTime()));
         } catch (ParseException e) {
-            LOGGER.error("Could not parse date - {}", infoFrom.getTimeFrom());
+            LOGGER.error("Could not parse date - {}", addressLineFrom.getTime());
         }
-        truckDelivery.setZipcodeFrom(infoFrom.getZipcodeFrom());
+        truckDelivery.setZipcodeFrom(addressLineFrom.getZipcode());
     }
 
     /**
      * Set information to entity
      *
-     * @param infoTo        information about where to deliver cargo
+     * @param addressLineTo information about where to deliver cargo
      * @param truckDelivery entity class
      */
-    private void saveInformationTo(InfoTo infoTo, TruckDelivery truckDelivery) {
-        truckDelivery.setAddressTo(infoTo.getAddressTo());
-        truckDelivery.setCityTo(infoTo.getCityTo());
-        truckDelivery.setStateTo(infoTo.getStateTo());
+    private void saveInformationTo(AddressLine addressLineTo, TruckDelivery truckDelivery) {
+        truckDelivery.setAddressTo(addressLineTo.getAddress());
+        truckDelivery.setCityTo(addressLineTo.getCity());
+        truckDelivery.setStateTo(addressLineTo.getState());
+        truckDelivery.setCompanyTo(addressLineTo.getCompany());
         try {
-            truckDelivery.setTimeTo(new Timestamp(dateFormat.parse(infoTo.getTimeTo()).getTime()));
+            truckDelivery.setTimeTo(new Timestamp(dateFormat.parse(addressLineTo.getTime()).getTime()));
         } catch (ParseException e) {
-            LOGGER.error("Could not parse date - {}", infoTo.getTimeTo());
+            LOGGER.error("Could not parse date - {}", addressLineTo.getTime());
         }
-        truckDelivery.setZipcodeTo(infoTo.getZipcodeTo());
+        truckDelivery.setZipcodeTo(addressLineTo.getZipcode());
     }
 
     /**
@@ -200,8 +212,11 @@ public class TruckDeliveryService {
             LOGGER.info("Device wasn't found licensePlate - {} and truckNumber - {}", truckInfo.getPlateNumber(),
                     truckInfo.getTruckNumber());
             DeviceLightweight deviceLightweight = new DeviceLightweight();
+            var account = getAccount();
+            deviceLightweight.setAccount(account);
+            deviceLightweight.setAccountCode(account.getContactEmail());
             deviceLightweight.setLicensePlate(truckInfo.getPlateNumber());
-            deviceLightweight.setLegacyDeviceId(truckInfo.getTruckNumber());
+            deviceLightweight.setLegacyDeviceId(String.valueOf(truckInfo.getTruckNumber()));
             deviceLightweight.setEquipmentType("Mobile");
             deviceService.save(deviceLightweight);
             return deviceLightweight;
@@ -221,9 +236,13 @@ public class TruckDeliveryService {
         if (driver == null) {
             LOGGER.info("Driver wasn't found driverName - {}", driverInfo.getName());
             Driver driverEntity = new Driver();
+            driverEntity.setAccount(getAccount());
+            driverEntity.setLogin(driverInfo.getLogin());
+            driverEntity.setMobile(true);
             driverEntity.setDisplayName(driverInfo.getName());
             driverEntity.setContactPhone(driverInfo.getPhone());
             driverEntity.setMobile(true);
+            driverEntity.setDriverCode("TRUCK_DRIVER");
             if (driverInfo.getEmail() != null) {
                 driverEntity.setContactEmail(driverInfo.getEmail());
             }
@@ -234,4 +253,7 @@ public class TruckDeliveryService {
         return driver;
     }
 
+    private AccountLightweight getAccount(){
+        return accountRepository.getOne(1);
+    }
 }

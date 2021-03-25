@@ -11,17 +11,32 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class BrokerInfo {
 
+    /**
+     * broker company name
+     */
     @NotNull
     private String brokerCompany;
 
+    /**
+     * broker company address
+     */
     @NotNull
     private String brokerAddress;
 
+    /**
+     * broker company phone number
+     */
     @NotNull
     private String brokerPhone;
 
-    private String brokerPhoneExtension;
+    /**
+     * broker company extension number
+     */
+    private Integer brokerPhoneExtension;
 
+    /**
+     * broker name
+     */
     @NotNull
     private String brokerName;
 

@@ -5,16 +5,34 @@ import lombok.Data;
 @Data
 public class DeliveryResponse {
 
+    /**
+     * truck number
+     */
+    private int deviceId;
+
+    /**
+     * driver name
+     */
     private String driverName;
 
-    private InfoFrom infoFrom;
+    /**
+     * address information where from deliver
+     */
+    private AddressLine addressLine;
 
-    private InfoTo infoTo;
+    /**
+     * address information where to deliver
+     */
+    private AddressLine addressLineTo;
 
-    private Integer pallets;
-
+    /**
+     * cargo weight
+     */
     private Integer weight;
 
+    /**
+     * cargo type
+     */
     private String cargoType;
 
 }

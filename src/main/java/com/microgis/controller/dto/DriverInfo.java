@@ -11,11 +11,25 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DriverInfo {
 
+    /**
+     * driver login
+     */
+    private String login;
+
+    /**
+     * driver full name
+     */
     @NotNull
     private String name;
 
+    /**
+     * driver contact email
+     */
     private String email;
 
+    /**
+     * driver phone number
+     */
     @NotNull
     private String phone;
 

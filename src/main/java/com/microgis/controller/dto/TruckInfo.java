@@ -11,14 +11,26 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class TruckInfo {
 
+    /**
+     * truck number
+     */
     @NotNull
-    private String truckNumber;
+    private Integer truckNumber;
 
+    /**
+     * truck plate number
+     */
     @NotNull
     private String plateNumber;
 
+    /**
+     * trailer number
+     */
     private String trailerNumber;
 
+    /**
+     * trailer plate number
+     */
     private String trailerPlateNumber;
 
 }
