@@ -1,0 +1,43 @@
+{
+  "loadNumber": 123,
+  "pickupNumber": 345,
+  "truck": {
+    "truckNumber": 123,
+    "plateNumber": "asdf345",
+    "trailerNumber": 456,
+    "trailerPlateNumber": "hg67dkd"
+  },
+  "driver": {
+    "login": "userLoginlogin",
+    "name": "test",
+    "email": "test@test.com",
+    "phone": "+35699484845535"
+  },
+  "broker": {
+    "brokerCompany": "U.S. FOODSERVICE-PERTH",
+    "brokerAddress": "1051 AMBOY AVE",
+    "brokerPhone": "+380 91 934 7200",
+    "brokerPhoneExtension": null,
+    "brokerName": "ivan"
+  },
+  "addressLineFrom": {
+    "address": "1051 AMBOY AVE",
+    "city": "Perth Amboy",
+    "state": "NJ",
+    "time": "2020-02-20 12:00",
+    "zipcode": "08861",
+    "company": "company"
+  },
+  "addressLineTo": {
+    "address": "203 WEST AVE",
+    "city": "Ludlow",
+    "state": "MA",
+    "time": "2020-02-22 12:00",
+    "zipcode": "01056",
+    "company": "company"
+  },
+  "status": "created",
+  "pallets": 233,
+  "weight": 345,
+  "cargoType": "bricks"
+}

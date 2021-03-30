@@ -1,0 +1,22 @@
+{
+  "deviceId": 4898,
+  "driverName": "test",
+  "addressLineFrom": {
+    "address": "1051 AMBOY AVE",
+    "city": "Perth Amboy",
+    "state": "NJ",
+    "time": "2020-02-20 12:00:00.0",
+    "zipcode": "08861",
+    "company": "companyFrom"
+  },
+  "addressLineTo": {
+    "address": "203 WEST AVE",
+    "city": "Ludlow",
+    "state": "MA",
+    "time": "2020-02-22 12:00:00.0",
+    "zipcode": "01056",
+    "company": "companyTo"
+  },
+  "weight": 345,
+  "cargoType": "bricks"
+}
