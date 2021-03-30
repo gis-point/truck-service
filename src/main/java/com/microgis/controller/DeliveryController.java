@@ -29,7 +29,7 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponse> getDeliveryInformation(Authentication authentication) {
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
         Map<String, Object> attributes = token.getTokenAttributes();
-        String username = (String) attributes.get("username");
+        String username = (String) attributes.get("login");
         LOGGER.info("Get delivery information for user - {}", username);
         var deliveryInfo = truckDeliveryService.getDeliveryResponse(username);
         return deliveryInfo == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(deliveryInfo);

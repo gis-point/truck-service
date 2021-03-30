@@ -18,7 +18,7 @@ public class DeliveryResponse {
     /**
      * address information where from deliver
      */
-    private AddressLine addressLine;
+    private AddressLine addressLineFrom;
 
     /**
      * address information where to deliver

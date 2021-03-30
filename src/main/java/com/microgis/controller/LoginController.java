@@ -1,8 +1,6 @@
 package com.microgis.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microgis.controller.dto.*;
+import com.microgis.controller.dto.LoginResponse;
 import com.microgis.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -51,7 +49,7 @@ public class LoginController {
 
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
             Map<String, String> claims = new HashMap<>();
-            claims.put("username", username);
+            claims.put("login", username);
 
             String authorities = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
@@ -59,23 +57,6 @@ public class LoginController {
             claims.put("authorities", authorities);
 
             String jwt = jwtService.createJwtForClaims(username, claims);
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                TruckDeliveryInfo truckDeliveryInfo=new TruckDeliveryInfo();
-
-                TruckInfo TruckInfo=new TruckInfo();
-                DriverInfo DriverInfo=new DriverInfo();
-                BrokerInfo BrokerInfo=new BrokerInfo();
-                AddressLine AddressLine =new AddressLine();
-                truckDeliveryInfo.setDriver(DriverInfo);
-                truckDeliveryInfo.setTruck(TruckInfo);
-                truckDeliveryInfo.setBroker(BrokerInfo);
-                truckDeliveryInfo.setAddressLineFrom(AddressLine);
-                truckDeliveryInfo.setAddressLineTo(AddressLine);
-                String s =mapper.writeValueAsString(truckDeliveryInfo);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
             return new LoginResponse(jwt);
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");

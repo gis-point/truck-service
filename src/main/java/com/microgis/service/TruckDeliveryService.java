@@ -1,5 +1,6 @@
 package com.microgis.service;
 
+import com.microgis.config.AppConfig;
 import com.microgis.controller.dto.*;
 import com.microgis.persistence.dto.DeliveryStatus;
 import com.microgis.persistence.entity.AccountLightweight;
@@ -33,6 +34,8 @@ public class TruckDeliveryService {
 
     private final DriverService driverService;
 
+    private final AppConfig appConfig;
+
     /**
      * Saving delivery information into database
      *
@@ -45,6 +48,7 @@ public class TruckDeliveryService {
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
         truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
         truckDelivery.setStatus(DeliveryStatus.getDeliveryStatus(truckDeliveryInfo.getStatus()));
+        cleanCache(truckDeliveryInfo, truckDelivery);
         var deviceLightweight = saveDeviceInformation(truckDeliveryInfo.getTruck());
         var driver = saveDriverInformation(truckDeliveryInfo.getDriver());
         truckDelivery.setTruck(deviceLightweight);
@@ -63,7 +67,7 @@ public class TruckDeliveryService {
      * @return delivery information for response
      */
     public DeliveryResponse getDeliveryResponse(String username) {
-        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByUserNameAndStatus(username, DeliveryStatus.CREATED)
+        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoginAndStatus(username, DeliveryStatus.CREATED)
                 .orElse(null);
         if (truckDelivery != null) {
             LOGGER.info("Delivery information found for user - {}", username);
@@ -101,13 +105,14 @@ public class TruckDeliveryService {
      * @param deliveryResponse dto class
      */
     private void formatAddressFromResponse(TruckDelivery truckDelivery, DeliveryResponse deliveryResponse) {
-        AddressLine addressLine = new AddressLine();
-        addressLine.setAddress(truckDelivery.getAddressFrom());
-        addressLine.setCity(truckDelivery.getCityFrom());
-        addressLine.setState(truckDelivery.getStateFrom());
-        addressLine.setTime(truckDelivery.getTimeFrom().toString());
-        addressLine.setZipcode(truckDelivery.getZipcodeFrom());
-        deliveryResponse.setAddressLine(addressLine);
+        AddressLine addressLineFrom = new AddressLine();
+        addressLineFrom.setAddress(truckDelivery.getAddressFrom());
+        addressLineFrom.setCity(truckDelivery.getCityFrom());
+        addressLineFrom.setState(truckDelivery.getStateFrom());
+        addressLineFrom.setTime(truckDelivery.getTimeFrom().toString());
+        addressLineFrom.setZipcode(truckDelivery.getZipcodeFrom());
+        addressLineFrom.setCompany(truckDelivery.getCompanyFrom());
+        deliveryResponse.setAddressLineFrom(addressLineFrom);
     }
 
     /**
@@ -123,6 +128,7 @@ public class TruckDeliveryService {
         addressLineTo.setState(truckDelivery.getStateTo());
         addressLineTo.setTime(truckDelivery.getTimeTo().toString());
         addressLineTo.setZipcode(truckDelivery.getZipcodeTo());
+        addressLineTo.setCompany(truckDelivery.getCompanyTo());
         deliveryResponse.setAddressLineTo(addressLineTo);
     }
 
@@ -244,8 +250,22 @@ public class TruckDeliveryService {
             driverService.save(driverEntity);
             return driverEntity;
         }
-        LOGGER.info("Driver found deviceId - {}", driver.getId());
+        LOGGER.info("Driver found driverId - {}", driver.getId());
         return driver;
+    }
+
+    /**
+     * Checking if trip is done and cleaning cache
+     *
+     * @param truckDeliveryInfo delivery information
+     * @param truckDelivery     entity class
+     */
+    private void cleanCache(TruckDeliveryInfo truckDeliveryInfo, TruckDelivery truckDelivery) {
+        if (truckDelivery.getTruck() != null
+                && DeliveryStatus.getDeliveryStatus(truckDeliveryInfo.getStatus()).equals(DeliveryStatus.COMPLETED)
+                || DeliveryStatus.getDeliveryStatus(truckDeliveryInfo.getStatus()).equals(DeliveryStatus.DELETED)) {
+            appConfig.evictCache("device", "findById" + truckDelivery.getTruck().getId());
+        }
     }
 
     private AccountLightweight getAccount() {

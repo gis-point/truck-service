@@ -22,6 +22,6 @@ public class LoginService {
      * @return exist user or not
      */
     public void checkLoginInformation(Login login) {
-
+        LOGGER.info("Sent authorization information to volo - {}", login);
     }
 }

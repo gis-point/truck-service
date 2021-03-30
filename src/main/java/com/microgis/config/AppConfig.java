@@ -19,7 +19,7 @@ public class AppConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("driver", "voyage", "geozone", "device");
+        return new ConcurrentMapCacheManager("device");
     }
 
     public void evictCache(String name, String key) {

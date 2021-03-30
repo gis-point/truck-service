@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface TruckDeliveryRepository extends JpaRepository<TruckDelivery, Integer> {
 
     @Query("select delivery from TruckDelivery delivery where delivery.driver.login = :login and delivery.status = :status")
-    Optional<TruckDelivery> findTruckDeliveryByUserNameAndStatus(@Param("login") String login, @Param("status") DeliveryStatus status);
+    Optional<TruckDelivery> findTruckDeliveryByLoginAndStatus(@Param("login") String login, @Param("status") DeliveryStatus status);
 
     @Query("select delivery from TruckDelivery delivery where delivery.loadNumber = :loadNumber")
     Optional<TruckDelivery> findTruckDeliveryByLoadNumber(@Param("loadNumber") String loadNumber);

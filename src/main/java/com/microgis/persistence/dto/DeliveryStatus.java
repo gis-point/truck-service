@@ -2,6 +2,7 @@ package com.microgis.persistence.dto;
 
 import lombok.ToString;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +22,7 @@ public enum DeliveryStatus {
     private static final Map<String, DeliveryStatus> LOOKUP_MAP = new HashMap<>();
 
     static {
-        for (DeliveryStatus env : values()) {
-            LOOKUP_MAP.put(env.getStatus(), env);
-        }
+        Arrays.stream(values()).forEach(env -> LOOKUP_MAP.put(env.getStatus(), env));
     }
 
     public static DeliveryStatus getDeliveryStatus(String url) {

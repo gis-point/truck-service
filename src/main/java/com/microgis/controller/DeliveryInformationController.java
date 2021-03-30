@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/truck-service")
@@ -28,11 +25,26 @@ public class DeliveryInformationController {
      * @return 200 if everything ok
      */
     @PostMapping("/deliveryInfo")
-    public ResponseEntity<Object> deliveryInfo(Authentication authentication,
-                                               @RequestBody TruckDeliveryInfo truckDeliveryInfo) {
+    public ResponseEntity<Object> createDeliveryInfo(Authentication authentication,
+                                                     @RequestBody TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Get delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
         LOGGER.info("Delivery information processed");
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Updating delivery information
+     *
+     * @param truckDeliveryInfo information about delivery
+     * @return 200 if everything ok
+     */
+    @PutMapping("/deliveryInfo")
+    public ResponseEntity<Object> updateDeliveryInfo(Authentication authentication,
+                                                     @RequestBody TruckDeliveryInfo truckDeliveryInfo) {
+        LOGGER.info("Updating delivery information - {}", truckDeliveryInfo);
+        truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
+        LOGGER.info("Delivery information updated");
         return ResponseEntity.ok().build();
     }
 

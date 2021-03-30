@@ -7,17 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonTypeName("com.microgis.telematic.model.EventData")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "@class")
-public class EventData implements Serializable {
-
-    private static final long serialVersionUID = -3139283700398541579L;
+public class EventData {
 
     private String accountID;
 

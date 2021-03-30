@@ -19,7 +19,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails user = User
-                .withUsername("user")
+                .withUsername("userLoginlogin")
                 .authorities("USER")
                 .passwordEncoder(passwordEncoder::encode)
                 .password("1234")
