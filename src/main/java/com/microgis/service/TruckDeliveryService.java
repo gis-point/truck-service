@@ -242,7 +242,6 @@ public class TruckDeliveryService {
             driverEntity.setMobile(true);
             driverEntity.setDisplayName(driverInfo.getName());
             driverEntity.setContactPhone(driverInfo.getPhone());
-            driverEntity.setMobile(true);
             driverEntity.setDriverCode("TRUCK_DRIVER");
             if (driverInfo.getEmail() != null) {
                 driverEntity.setContactEmail(driverInfo.getEmail());
