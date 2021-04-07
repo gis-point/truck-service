@@ -45,6 +45,7 @@ public class TruckDeliveryService {
         LOGGER.info("Saving delivery information into database");
         var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
                 .orElse(new TruckDelivery());
+        truckDelivery.setDomain(truckDeliveryInfo.getDomain());
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
         truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
         truckDelivery.setStatus(DeliveryStatus.getDeliveryStatus(truckDeliveryInfo.getStatus()));

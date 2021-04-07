@@ -41,6 +41,14 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    /**
+     * User authorization and jwt token creation
+     *
+     * @param domain   volo domain
+     * @param email    driver email
+     * @param password driver password
+     * @return jwt token
+     */
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public JwtResponse getToken(@RequestParam(value = "domain", required = false) String domain,
                                 @RequestParam("email") String email,

@@ -55,6 +55,11 @@ public class DeliveryInformationController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Call volo service for available domains
+     *
+     * @return list of volo domains
+     */
     @GetMapping("/domain")
     public ResponseEntity<List<DomainResponse>> getDomains() {
         LOGGER.info("Get domains info");

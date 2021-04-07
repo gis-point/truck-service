@@ -21,6 +21,13 @@ public class CoordinateController {
 
     private final RedisService redisService;
 
+    /**
+     * Post gps information to redis
+     *
+     * @param authentication   bearer token
+     * @param mobileCoordinate gps coordinates
+     * @return 200 id everything ok
+     */
     @PostMapping("/eventData")
     public ResponseEntity<Object> storeCoordinates(Authentication authentication,
                                                    @RequestBody MobileCoordinate mobileCoordinate) {

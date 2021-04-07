@@ -25,6 +25,12 @@ public class DeliveryController {
 
     private final TruckDeliveryService truckDeliveryService;
 
+    /**
+     * Delivery information for driver
+     *
+     * @param authentication bearer token
+     * @return delivery information for driver
+     */
     @GetMapping("/delivery")
     public ResponseEntity<DeliveryResponse> getDeliveryInformation(Authentication authentication) {
         JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
