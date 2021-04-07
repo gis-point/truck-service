@@ -1,7 +1,9 @@
 package com.microgis.controller;
 
-import com.microgis.controller.dto.LoginResponse;
+import com.microgis.controller.dto.JwtResponse;
+import com.microgis.controller.dto.LoginRequest;
 import com.microgis.service.JwtService;
+import com.microgis.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,27 +39,37 @@ public class LoginController {
 
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping(path = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public LoginResponse getToken(@RequestParam("user") String username, @RequestParam("password") String password) {
-        LOGGER.info("Trying to login user with username - {} and password - {}", username, password);
+    private final LoginService loginService;
+
+    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public JwtResponse getToken(@RequestParam(value = "domain", required = false) String domain,
+                                @RequestParam("email") String email,
+                                @RequestParam("password") String password) {
+        LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
         UserDetails userDetails;
         try {
-            userDetails = userDetailsService.loadUserByUsername(username);
+            LoginRequest loginRequest = new LoginRequest(domain, email, password);
+            var loginResponse = loginService.checkLoginInformation(loginRequest);
+            if (loginResponse != null) {
+                userDetails = userDetailsService.loadUserByUsername(email + ";" + password);
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
+            }
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
         }
-
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
             Map<String, String> claims = new HashMap<>();
-            claims.put("login", username);
+            claims.put("login", email);
+            claims.put("domain", domain);
 
             String authorities = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(","));
             claims.put("authorities", authorities);
 
-            String jwt = jwtService.createJwtForClaims(username, claims);
-            return new LoginResponse(jwt);
+            String jwt = jwtService.createJwtForClaims(email, claims);
+            return new JwtResponse(jwt);
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
     }

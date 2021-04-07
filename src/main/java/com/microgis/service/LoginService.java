@@ -1,13 +1,12 @@
 package com.microgis.service;
 
-import com.microgis.controller.dto.Login;
+import com.microgis.controller.dto.LoginRequest;
+import com.microgis.controller.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -30,21 +29,15 @@ public class LoginService {
      * @param login user authorization information
      * @return exist user or not
      */
-    public boolean checkLoginInformation(Login login) {
+    public LoginResponse checkLoginInformation(LoginRequest login) throws ResponseStatusException {
         LOGGER.info("Sent authorization information to volo - {}", login);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth("");
-        ResponseEntity<Object> responseEntity = restTemplate.postForEntity(url, headers, Object.class);
+        ResponseEntity<LoginResponse> responseEntity = restTemplate.postForEntity(url + "/login", login, LoginResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            var password = responseEntity.getBody().toString();
-            if (password.equals(login.getPassword())) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+            return responseEntity.getBody();
+        } else if (responseEntity.getStatusCode() == HttpStatus.UNAUTHORIZED) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
         }
+        return null;
     }
+
 }

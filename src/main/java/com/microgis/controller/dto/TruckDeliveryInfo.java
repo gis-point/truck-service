@@ -12,6 +12,12 @@ import javax.validation.constraints.NotNull;
 public class TruckDeliveryInfo {
 
     /**
+     * volo domain
+     */
+    @NotNull
+    private String domain;
+
+    /**
      * delivery load number
      */
     @NotNull

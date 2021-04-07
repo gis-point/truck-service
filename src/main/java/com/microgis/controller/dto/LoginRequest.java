@@ -1,9 +1,13 @@
 package com.microgis.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class LoginResponse {
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginRequest {
 
     /**
      * volo domain
@@ -11,23 +15,13 @@ public class LoginResponse {
     private String domain;
 
     /**
-     * driver id
-     */
-    private String id;
-
-    /**
-     * driver name
-     */
-    private String name;
-
-    /**
      * driver email
      */
     private String email;
 
     /**
-     * driver phine number
+     * driver password
      */
-    private String phone;
+    private String password;
 
 }

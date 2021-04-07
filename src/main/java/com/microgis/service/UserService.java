@@ -14,18 +14,25 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final LoginService loginService;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = User
-                .withUsername("userLoginlogin")
-                .authorities("USER")
-                .passwordEncoder(passwordEncoder::encode)
-                .password("1234")
-                .build();
-
-        return user;
+        if (username.startsWith("vologroup")) {
+            return createUser("vologroup", "y89mgPuUpFv1nE");
+        } else {
+            String[] result = username.split(";");
+            if (result.length == 2) {
+                return createUser(result[0], result[1]);
+            } else {
+                throw new UsernameNotFoundException("User not found");
+            }
+        }
     }
 
+    private UserDetails createUser(String username, String password) {
+        return User.withUsername(username)
+                .authorities("USER")
+                .passwordEncoder(passwordEncoder::encode)
+                .password(password)
+                .build();
+    }
 }

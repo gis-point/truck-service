@@ -5,11 +5,11 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 
-class LoginResponseTest {
+class JwtResponseTest {
 
     @Test
     void testEquals() {
-        EqualsVerifier.forClass(LoginResponse.class)
+        EqualsVerifier.forClass(JwtResponse.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .suppress(Warning.STRICT_INHERITANCE)
                 .usingGetClass()
@@ -18,7 +18,7 @@ class LoginResponseTest {
 
     @Test
     void testToString() {
-        ToStringVerifier.forClass(LoginResponse.class).verify();
+        ToStringVerifier.forClass(JwtResponse.class).verify();
     }
 
 }
