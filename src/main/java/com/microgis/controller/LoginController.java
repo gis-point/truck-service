@@ -1,9 +1,7 @@
 package com.microgis.controller;
 
 import com.microgis.controller.dto.JwtResponse;
-import com.microgis.controller.dto.LoginRequest;
 import com.microgis.service.JwtService;
-import com.microgis.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +38,6 @@ public class LoginController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final LoginService loginService;
-
     /**
      * User authorization and jwt token creation
      *
@@ -57,22 +53,17 @@ public class LoginController {
                                 HttpServletRequest httpServletRequest) {
         LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
         UserDetails userDetails;
+        String domainName = "";
         try {
-            String domainName = domain != null ? domain : httpServletRequest.getServerName();
-            LoginRequest loginRequest = new LoginRequest(domainName, email, password);
-            var loginResponse = loginService.checkLoginInformation(loginRequest);
-            if (loginResponse != null) {
-                userDetails = userDetailsService.loadUserByUsername(email + ";" + password);
-            } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
-            }
+            domainName = domain != null ? domain : httpServletRequest.getServerName();
+            userDetails = userDetailsService.loadUserByUsername(email + ";" + password + ";" + domainName);
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
         }
         if (passwordEncoder.matches(password, userDetails.getPassword())) {
             Map<String, String> claims = new HashMap<>();
             claims.put("login", email);
-            claims.put("domain", domain);
+            claims.put("domain", domainName);
 
             String authorities = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
