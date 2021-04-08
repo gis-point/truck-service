@@ -5,7 +5,6 @@ import com.microgis.controller.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,6 @@ public class LoginService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginService.class);
 
-    @Value("${volo.url}")
-    private String url;
-
     private final RestTemplate restTemplate;
 
     /**
@@ -31,7 +27,8 @@ public class LoginService {
      */
     public LoginResponse checkLoginInformation(LoginRequest login) throws ResponseStatusException {
         LOGGER.info("Sent authorization information to volo - {}", login);
-        ResponseEntity<LoginResponse> responseEntity = restTemplate.postForEntity(url + "/login", login, LoginResponse.class);
+        ResponseEntity<LoginResponse> responseEntity = restTemplate.postForEntity("https//" + login.getDomain() +
+                "/api/login", login, LoginResponse.class);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return responseEntity.getBody();
         } else if (responseEntity.getStatusCode() == HttpStatus.UNAUTHORIZED) {

@@ -19,11 +19,11 @@ public class DeviceService {
         return deviceRepository.findById(id).orElse(null);
     }
 
-    public DeviceLightweight findDeviceLightweightByLicensePlate(String licensePlate){
+    public DeviceLightweight findDeviceLightweightByLicensePlate(String licensePlate) {
         return deviceRepository.findDeviceLightweightByLicensePlate(licensePlate).orElse(null);
     }
 
-    public void save(DeviceLightweight deviceLightweight){
+    public void save(DeviceLightweight deviceLightweight) {
         deviceRepository.save(deviceLightweight);
     }
 

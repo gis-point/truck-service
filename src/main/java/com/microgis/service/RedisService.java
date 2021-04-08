@@ -35,32 +35,57 @@ public class RedisService {
         LOGGER.info("Post info to redis with values - {}", mobileCoordinate);
         var redissonClient = redisConfig.getClient();
         RQueue<EventData> queue = redissonClient.getQueue("RawData");
-        mobileCoordinate.getLocations().stream()
-                .peek(location -> {
-                    if (!location.getIsReal()) {
-                        LOGGER.info("Coordinates is non real, username - {}", mobileCoordinate.getUsername());
-                    }
-                })
-                .filter(Location::getIsReal)
-                .map(location -> EventData.builder()
-                        .accountID(mobileCoordinate.getAccount())
-                        .deviceID(deviceId)
-                        .timestamp(location.getTime() / 1000L)
-                        .statusCode(61714)
-                        .latitude(location.getLatitude())
-                        .longitude(location.getLongitude())
-                        .speedKPH((int) location.getSpeed())
-                        .heading(0)
-                        .altitude(0)
-                        .rawData(null)
-                        .creationTime(String.valueOf(mobileCoordinate.getCreationTime() / 1000L))
-                        .HDOP(0)
-                        .satelliteCount(MIN_NUMBER_SATELLITE)
-                        .processingStatus(0)
-                        .deviceIndex(mobileCoordinate.getDeviceId())
-                        .build())
-                .peek(eventData -> LOGGER.info("Adding to redis - {}", eventData))
-                .forEach(queue::add);
+        mobileCoordinate.getLocations()
+                .stream()
+                .filter(location -> filterRealCoordinates(mobileCoordinate, location))
+                .map(location -> fillDataForRedis(mobileCoordinate, deviceId, location))
+                .forEach(eventData -> {
+                    LOGGER.info("Adding to redis - {}", eventData);
+                    queue.add(eventData);
+                });
+    }
+
+    /**
+     * Fill information for redis
+     *
+     * @param mobileCoordinate coordinates information
+     * @param deviceId         device id
+     * @param location         gps coordinates
+     * @return dto for redis
+     */
+    private EventData fillDataForRedis(MobileCoordinate mobileCoordinate, String deviceId, Location location) {
+        return EventData.builder()
+                .accountID(mobileCoordinate.getAccount())
+                .deviceID(deviceId)
+                .timestamp(location.getTime() / 1000L)
+                .statusCode(61714)
+                .latitude(location.getLatitude())
+                .longitude(location.getLongitude())
+                .speedKPH((int) location.getSpeed())
+                .heading(0)
+                .altitude(0)
+                .rawData(null)
+                .creationTime(String.valueOf(mobileCoordinate.getCreationTime() / 1000L))
+                .HDOP(0)
+                .satelliteCount(MIN_NUMBER_SATELLITE)
+                .processingStatus(0)
+                .deviceIndex(mobileCoordinate.getDeviceId())
+                .build();
+    }
+
+    /**
+     * Filter unreal coordinates
+     *
+     * @param mobileCoordinate coordinates info
+     * @param location         gps coordinates
+     * @return true/false
+     */
+    @SuppressWarnings("java:S5411")
+    private Boolean filterRealCoordinates(MobileCoordinate mobileCoordinate, Location location) {
+        if (!location.getIsReal()) {
+            LOGGER.info("Coordinates is non real, username - {}", mobileCoordinate.getUsername());
+        }
+        return location.getIsReal();
     }
 
 }

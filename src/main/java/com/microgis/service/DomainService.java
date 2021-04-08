@@ -27,8 +27,8 @@ public class DomainService {
      * @return list of domains
      */
     public List<DomainResponse> getDomains() {
-        ResponseEntity<List<DomainResponse>> responseEntity = restTemplate.exchange(url + "/sites", HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<DomainResponse>>() {
+        ResponseEntity<List<DomainResponse>> responseEntity = restTemplate.exchange(url + "/sites", HttpMethod.GET,
+                null, new ParameterizedTypeReference<List<DomainResponse>>() {
                 });
         return responseEntity.getStatusCode() == HttpStatus.OK ? responseEntity.getBody() : null;
     }

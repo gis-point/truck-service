@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests(configurer ->
                         configurer
-                                .antMatchers("/truck-service/login")
+                                .antMatchers("/truck-service/login", "/truck-service/domain")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated())

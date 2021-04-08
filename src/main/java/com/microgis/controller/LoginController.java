@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,11 +53,13 @@ public class LoginController {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public JwtResponse getToken(@RequestParam(value = "domain", required = false) String domain,
                                 @RequestParam("email") String email,
-                                @RequestParam("password") String password) {
+                                @RequestParam("password") String password,
+                                HttpServletRequest httpServletRequest) {
         LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
         UserDetails userDetails;
         try {
-            LoginRequest loginRequest = new LoginRequest(domain, email, password);
+            String domainName = domain != null ? domain : httpServletRequest.getServerName();
+            LoginRequest loginRequest = new LoginRequest(domainName, email, password);
             var loginResponse = loginService.checkLoginInformation(loginRequest);
             if (loginResponse != null) {
                 userDetails = userDetailsService.loadUserByUsername(email + ";" + password);
