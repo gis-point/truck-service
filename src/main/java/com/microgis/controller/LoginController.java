@@ -52,7 +52,7 @@ public class LoginController {
                                 @RequestParam("password") String password,
                                 HttpServletRequest httpServletRequest) {
         UserDetails userDetails;
-        String domainName = domain != null ? domain : httpServletRequest.getServerName();
+        String domainName = domain != null ? domain : getClientIp(httpServletRequest);
         LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
         try {
             userDetails = userDetailsService.loadUserByUsername(email + ";" + password + ";" + domainName);
@@ -73,6 +73,23 @@ public class LoginController {
             return new JwtResponse(jwt);
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+    }
+
+    /**
+     * Get client ip
+     *
+     * @param request http request
+     * @return real client api
+     */
+    private static String getClientIp(HttpServletRequest request) {
+        String remoteAddr = "";
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+        return remoteAddr;
     }
 
 }
