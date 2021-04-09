@@ -51,11 +51,10 @@ public class LoginController {
                                 @RequestParam("email") String email,
                                 @RequestParam("password") String password,
                                 HttpServletRequest httpServletRequest) {
-        LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
         UserDetails userDetails;
-        String domainName = "";
+        String domainName = domain != null ? domain : httpServletRequest.getServerName();
+        LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
         try {
-            domainName = domain != null ? domain : httpServletRequest.getServerName();
             userDetails = userDetailsService.loadUserByUsername(email + ";" + password + ";" + domainName);
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
