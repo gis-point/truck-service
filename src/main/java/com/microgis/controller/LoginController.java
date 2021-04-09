@@ -53,7 +53,7 @@ public class LoginController {
                                 HttpServletRequest httpServletRequest) {
         UserDetails userDetails;
         String domainName = domain != null ? domain : getClientIp(httpServletRequest);
-        LOGGER.info("Trying to login user with domain - {} ,email - {} and password - {}", domain, email, password);
+        LOGGER.info("Trying to login user with domain - {}, email - {} and password - {}", domainName, email, password);
         try {
             userDetails = userDetailsService.loadUserByUsername(email + ";" + password + ";" + domainName);
         } catch (UsernameNotFoundException e) {
