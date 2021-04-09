@@ -4,6 +4,6 @@ services:
     build: .
     restart: always
     ports:
-      - '8088:8081'
+      - '8088:8080'
     container_name: truck-service
     image: 'truck-service:latest'
