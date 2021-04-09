@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  track-report-server:
+    build: .
+    restart: always
+    ports:
+      - '8088:8081'
+    container_name: truck-service
+    image: 'truck-service:latest'
