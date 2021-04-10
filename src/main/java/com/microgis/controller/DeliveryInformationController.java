@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/truck-service")
@@ -64,7 +66,15 @@ public class DeliveryInformationController {
     public ResponseEntity<List<DomainResponse>> getDomains() {
         LOGGER.info("Get domains info");
         var domains = domainService.getDomains();
-        return !CollectionUtils.isEmpty(domains) ? ResponseEntity.ok(domains) : ResponseEntity.noContent().build();
+        if (!CollectionUtils.isEmpty(domains)) {
+            return ResponseEntity.ok(
+                    domains
+                            .stream()
+                            .filter(domain -> StringUtils.hasText(domain.getDomain()))
+                            .collect(Collectors.toList())
+            );
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }
