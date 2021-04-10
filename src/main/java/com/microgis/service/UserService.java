@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (username.startsWith("vologroup")) {
-            return createUser("vologroup", "y89mgPuUpFv1nE");
+            return createUser("vologroup", "y89mgPuUpFv1nE"); //dummy user for volo group
         } else {
             String[] result = username.split(";");
             if (result.length == 3) {

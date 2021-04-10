@@ -1,20 +1,20 @@
 package com.microgis.controller;
 
 import com.microgis.controller.dto.JwtResponse;
+import com.microgis.controller.dto.LoginRequest;
 import com.microgis.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -41,17 +41,16 @@ public class LoginController {
     /**
      * User authorization and jwt token creation
      *
-     * @param domain   volo domain
-     * @param email    driver email
-     * @param password driver password
+     * @param loginRequest login  information
      * @return jwt token
      */
-    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public JwtResponse getToken(@RequestParam(value = "domain", required = false) String domain,
-                                @RequestParam("email") String email,
-                                @RequestParam("password") String password,
+    @PostMapping(path = "/login")
+    public JwtResponse getToken(@RequestBody LoginRequest loginRequest,
                                 HttpServletRequest httpServletRequest) {
         UserDetails userDetails;
+        String domain = loginRequest.getDomain();
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
         String domainName = domain != null ? domain : getClientIp(httpServletRequest);
         LOGGER.info("Trying to login user with domain - {}, email - {} and password - {}", domainName, email, password);
         try {
