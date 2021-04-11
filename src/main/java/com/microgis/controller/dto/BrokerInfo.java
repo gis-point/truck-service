@@ -15,29 +15,29 @@ public class BrokerInfo {
      * broker company name
      */
     @NotNull
-    private String brokerCompany;
+    private String company;
 
     /**
      * broker company address
      */
     @NotNull
-    private String brokerAddress;
+    private String address;
 
     /**
      * broker company phone number
      */
     @NotNull
-    private String brokerPhone;
+    private String phone;
 
     /**
      * broker company extension number
      */
-    private Integer brokerPhoneExtension;
+    private Integer phoneExtension;
 
     /**
      * broker name
      */
     @NotNull
-    private String brokerName;
+    private String name;
 
 }

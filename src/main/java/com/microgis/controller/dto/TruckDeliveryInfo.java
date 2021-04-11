@@ -11,7 +11,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class TruckDeliveryInfo {
 
-    private Integer voloId;
+    /**
+     * volo group trip id
+     */
+    @NotNull
+    private Integer id;
 
     /**
      * volo domain

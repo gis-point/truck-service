@@ -13,7 +13,7 @@ public interface TruckDeliveryRepository extends JpaRepository<TruckDelivery, In
     @Query("select delivery from TruckDelivery delivery where delivery.driver.login = :login and delivery.status = :status")
     Optional<TruckDelivery> findTruckDeliveryByLoginAndStatus(@Param("login") String login, @Param("status") DeliveryStatus status);
 
-    @Query("select delivery from TruckDelivery delivery where delivery.loadNumber = :loadNumber")
-    Optional<TruckDelivery> findTruckDeliveryByLoadNumber(@Param("loadNumber") String loadNumber);
+    @Query("select delivery from TruckDelivery delivery where delivery.voloId = :voloId")
+    Optional<TruckDelivery> findTruckDeliveryByVoloId(@Param("voloId") Integer voloId);
 
 }

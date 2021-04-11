@@ -43,8 +43,9 @@ public class TruckDeliveryService {
      */
     public void saveOrUpdateDeliveryInformation(TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Saving delivery information into database");
-        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
+        var truckDelivery = truckDeliveryRepository.findTruckDeliveryByVoloId(truckDeliveryInfo.getId())
                 .orElse(new TruckDelivery());
+        truckDelivery.setVoloId(truckDeliveryInfo.getId());
         truckDelivery.setDomain(truckDeliveryInfo.getAccountDomain());
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
         truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
@@ -192,11 +193,11 @@ public class TruckDeliveryService {
      * @param truckDelivery entity class
      */
     private void saveBrokerInfo(BrokerInfo broker, TruckDelivery truckDelivery) {
-        truckDelivery.setBrokerAddress(broker.getBrokerAddress());
-        truckDelivery.setBrokerName(broker.getBrokerName());
-        truckDelivery.setBrokerCompany(broker.getBrokerCompany());
-        truckDelivery.setBrokerPhone(broker.getBrokerPhone());
-        truckDelivery.setBrokerPhoneExtension(broker.getBrokerPhoneExtension());
+        truckDelivery.setBrokerAddress(broker.getAddress());
+        truckDelivery.setBrokerName(broker.getName());
+        truckDelivery.setBrokerCompany(broker.getCompany());
+        truckDelivery.setBrokerPhone(broker.getPhone());
+        truckDelivery.setBrokerPhoneExtension(broker.getPhoneExtension());
     }
 
     /**
@@ -209,13 +210,13 @@ public class TruckDeliveryService {
         var device = deviceService.findDeviceLightweightByLicensePlate(truckInfo.getPlateNumber());
         if (device == null) {
             LOGGER.info("Device wasn't found licensePlate - {} and truckNumber - {}", truckInfo.getPlateNumber(),
-                    truckInfo.getTruckNumber());
+                    truckInfo.getNumber());
             DeviceLightweight deviceLightweight = new DeviceLightweight();
             var account = getAccount();
             deviceLightweight.setAccount(account);
             deviceLightweight.setAccountCode(account.getContactEmail());
             deviceLightweight.setLicensePlate(truckInfo.getPlateNumber());
-            deviceLightweight.setLegacyDeviceId(String.valueOf(truckInfo.getTruckNumber()));
+            deviceLightweight.setLegacyDeviceId(String.valueOf(truckInfo.getNumber()));
             deviceLightweight.setEquipmentType("Mobile");
             deviceLightweight.setRecordEvent(true);
             deviceService.save(deviceLightweight);

@@ -15,6 +15,8 @@ public class TruckDelivery {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    private Integer voloId;
+
     private String domain;
 
     private String loadNumber;

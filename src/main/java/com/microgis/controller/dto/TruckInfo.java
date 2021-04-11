@@ -15,7 +15,7 @@ public class TruckInfo {
      * truck number
      */
     @NotNull
-    private Integer truckNumber;
+    private Integer number;
 
     /**
      * truck plate number
