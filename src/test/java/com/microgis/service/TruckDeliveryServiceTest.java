@@ -40,7 +40,7 @@ class TruckDeliveryServiceTest {
     void testSaveOrUpdateDeliveryInformation() {
         //given
         var truckDeliveryInfo = TruckServiceTestFixtures.createTruckDeliveryInfo();
-        when(truckDeliveryRepository.findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber()))
+        when(truckDeliveryRepository.findTruckDeliveryByVoloId(truckDeliveryInfo.getId()))
                 .thenReturn(Optional.empty());
         when(deviceService.findDeviceLightweightByLicensePlate(truckDeliveryInfo.getTruck().getPlateNumber()))
                 .thenReturn(null);
