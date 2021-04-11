@@ -11,11 +11,13 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class TruckDeliveryInfo {
 
+    private Integer voloId;
+
     /**
      * volo domain
      */
     @NotNull
-    private String domain;
+    private String accountDomain;
 
     /**
      * delivery load number
@@ -50,13 +52,13 @@ public class TruckDeliveryInfo {
      * address information where from deliver
      */
     @NotNull
-    private AddressLine addressLineFrom;
+    private AddressLine addressFrom;
 
     /**
      * address information where to deliver
      */
     @NotNull
-    private AddressLine addressLineTo;
+    private AddressLine addressTo;
 
     /**
      * delivery status

@@ -8,7 +8,6 @@
     "trailerPlateNumber": "hg67dkd"
   },
   "driver": {
-    "login": "userLoginlogin",
     "name": "test",
     "email": "test@test.com",
     "phone": "+35699484845535"
@@ -20,7 +19,7 @@
     "brokerPhoneExtension": null,
     "brokerName": "ivan"
   },
-  "addressLineFrom": {
+  "addressFrom": {
     "address": "1051 AMBOY AVE",
     "city": "Perth Amboy",
     "state": "NJ",
@@ -28,7 +27,7 @@
     "zipcode": "08861",
     "company": "company"
   },
-  "addressLineTo": {
+  "addressTo": {
     "address": "203 WEST AVE",
     "city": "Ludlow",
     "state": "MA",

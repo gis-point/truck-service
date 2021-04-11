@@ -12,11 +12,6 @@ import javax.validation.constraints.NotNull;
 public class DriverInfo {
 
     /**
-     * driver login
-     */
-    private String login;
-
-    /**
      * driver full name
      */
     @NotNull

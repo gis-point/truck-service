@@ -44,7 +44,7 @@ class TruckDeliveryServiceTest {
                 .thenReturn(Optional.empty());
         when(deviceService.findDeviceLightweightByLicensePlate(truckDeliveryInfo.getTruck().getPlateNumber()))
                 .thenReturn(null);
-        when(driverService.findDriverByDisplayNameAndContactPhone(truckDeliveryInfo.getDriver().getName(), truckDeliveryInfo.getDriver().getPhone()))
+        when(driverService.findDriverByContactPhone(truckDeliveryInfo.getDriver().getPhone()))
                 .thenReturn(null);
         when(accountRepository.getOne(1)).thenReturn(TruckServiceTestFixtures.createAccountLightweight());
 

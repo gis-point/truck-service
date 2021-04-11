@@ -27,11 +27,11 @@ class DriverServiceTest {
     @Test
     void testFindDriverByDisplayNameAndContactPhoneEmpty() {
         //given
-        when(driverRepository.findDriverByDisplayNameAndContactPhone("driverName", "driverPhoneNumber"))
+        when(driverRepository.findDriverByContactPhone("driverPhoneNumber"))
                 .thenReturn(Optional.empty());
 
         //when
-        var driver = driverService.findDriverByDisplayNameAndContactPhone("driverName", "driverPhoneNumber");
+        var driver = driverService.findDriverByContactPhone("driverPhoneNumber");
 
         //then
         assertNull(driver);
@@ -40,11 +40,11 @@ class DriverServiceTest {
     @Test
     void testFindDriverByDisplayNameAndContactPhone() {
         //given
-        when(driverRepository.findDriverByDisplayNameAndContactPhone("driverName", "driverPhoneNumber"))
+        when(driverRepository.findDriverByContactPhone("driverPhoneNumber"))
                 .thenReturn(Optional.of(TruckServiceTestFixtures.createDriver()));
 
         //when
-        var driver = driverService.findDriverByDisplayNameAndContactPhone("driverName", "driverPhoneNumber");
+        var driver = driverService.findDriverByContactPhone("driverPhoneNumber");
 
         //then
         assertEquals(1, driver.getAccount().getId());

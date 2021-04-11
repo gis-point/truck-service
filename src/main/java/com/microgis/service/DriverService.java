@@ -11,8 +11,8 @@ public class DriverService {
 
     private final DriverRepository driverRepository;
 
-    public Driver findDriverByDisplayNameAndContactPhone(String driverName, String driverPhoneNumber){
-        return driverRepository.findDriverByDisplayNameAndContactPhone(driverName, driverPhoneNumber).orElse(null);
+    public Driver findDriverByContactPhone( String driverPhoneNumber){
+        return driverRepository.findDriverByContactPhone( driverPhoneNumber).orElse(null);
     }
 
     public void save(Driver driver){

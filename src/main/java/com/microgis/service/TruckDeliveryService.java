@@ -45,7 +45,7 @@ public class TruckDeliveryService {
         LOGGER.info("Saving delivery information into database");
         var truckDelivery = truckDeliveryRepository.findTruckDeliveryByLoadNumber(truckDeliveryInfo.getLoadNumber())
                 .orElse(new TruckDelivery());
-        truckDelivery.setDomain(truckDeliveryInfo.getDomain());
+        truckDelivery.setDomain(truckDeliveryInfo.getAccountDomain());
         truckDelivery.setTrailerNumber(truckDeliveryInfo.getTruck().getTrailerNumber());
         truckDelivery.setTrailerPlateNumber(truckDeliveryInfo.getTruck().getTrailerPlateNumber());
         truckDelivery.setStatus(DeliveryStatus.getDeliveryStatus(truckDeliveryInfo.getStatus()));
@@ -56,8 +56,8 @@ public class TruckDeliveryService {
         truckDelivery.setDriver(driver);
         saveAdditionalInformation(truckDeliveryInfo, truckDelivery);
         saveBrokerInfo(truckDeliveryInfo.getBroker(), truckDelivery);
-        saveInformationFrom(truckDeliveryInfo.getAddressLineFrom(), truckDelivery);
-        saveInformationTo(truckDeliveryInfo.getAddressLineTo(), truckDelivery);
+        saveInformationFrom(truckDeliveryInfo.getAddressFrom(), truckDelivery);
+        saveInformationTo(truckDeliveryInfo.getAddressTo(), truckDelivery);
         truckDeliveryRepository.save(truckDelivery);
     }
 
@@ -106,14 +106,14 @@ public class TruckDeliveryService {
      * @param deliveryResponse dto class
      */
     private void formatAddressFromResponse(TruckDelivery truckDelivery, DeliveryResponse deliveryResponse) {
-        AddressLine addressLineFrom = new AddressLine();
-        addressLineFrom.setAddress(truckDelivery.getAddressFrom());
-        addressLineFrom.setCity(truckDelivery.getCityFrom());
-        addressLineFrom.setState(truckDelivery.getStateFrom());
-        addressLineFrom.setTime(truckDelivery.getTimeFrom().toString());
-        addressLineFrom.setZipcode(truckDelivery.getZipcodeFrom());
-        addressLineFrom.setCompany(truckDelivery.getCompanyFrom());
-        deliveryResponse.setAddressLineFrom(addressLineFrom);
+        AddressLine addressFrom = new AddressLine();
+        addressFrom.setAddress(truckDelivery.getAddressFrom());
+        addressFrom.setCity(truckDelivery.getCityFrom());
+        addressFrom.setState(truckDelivery.getStateFrom());
+        addressFrom.setTime(truckDelivery.getTimeFrom().toString());
+        addressFrom.setZipcode(truckDelivery.getZipcodeFrom());
+        addressFrom.setCompany(truckDelivery.getCompanyFrom());
+        deliveryResponse.setAddressLineFrom(addressFrom);
     }
 
     /**
@@ -123,14 +123,14 @@ public class TruckDeliveryService {
      * @param deliveryResponse dto class
      */
     private void formatAddressToResponse(TruckDelivery truckDelivery, DeliveryResponse deliveryResponse) {
-        AddressLine addressLineTo = new AddressLine();
-        addressLineTo.setAddress(truckDelivery.getAddressTo());
-        addressLineTo.setCity(truckDelivery.getCityTo());
-        addressLineTo.setState(truckDelivery.getStateTo());
-        addressLineTo.setTime(truckDelivery.getTimeTo().toString());
-        addressLineTo.setZipcode(truckDelivery.getZipcodeTo());
-        addressLineTo.setCompany(truckDelivery.getCompanyTo());
-        deliveryResponse.setAddressLineTo(addressLineTo);
+        AddressLine addressTo = new AddressLine();
+        addressTo.setAddress(truckDelivery.getAddressTo());
+        addressTo.setCity(truckDelivery.getCityTo());
+        addressTo.setState(truckDelivery.getStateTo());
+        addressTo.setTime(truckDelivery.getTimeTo().toString());
+        addressTo.setZipcode(truckDelivery.getZipcodeTo());
+        addressTo.setCompany(truckDelivery.getCompanyTo());
+        deliveryResponse.setAddressLineTo(addressTo);
     }
 
     /**
@@ -150,39 +150,39 @@ public class TruckDeliveryService {
     /**
      * Set information to entity
      *
-     * @param addressLineFrom information about where from deliver cargo
+     * @param addressFrom information about where from deliver cargo
      * @param truckDelivery   entity class
      */
-    private void saveInformationFrom(AddressLine addressLineFrom, TruckDelivery truckDelivery) {
-        truckDelivery.setAddressFrom(addressLineFrom.getAddress());
-        truckDelivery.setCityFrom(addressLineFrom.getCity());
-        truckDelivery.setStateFrom(addressLineFrom.getState());
-        truckDelivery.setCompanyFrom(addressLineFrom.getCompany());
+    private void saveInformationFrom(AddressLine addressFrom, TruckDelivery truckDelivery) {
+        truckDelivery.setAddressFrom(addressFrom.getAddress());
+        truckDelivery.setCityFrom(addressFrom.getCity());
+        truckDelivery.setStateFrom(addressFrom.getState());
+        truckDelivery.setCompanyFrom(addressFrom.getCompany());
         try {
-            truckDelivery.setTimeFrom(new Timestamp(dateFormat.parse(addressLineFrom.getTime()).getTime()));
+            truckDelivery.setTimeFrom(new Timestamp(dateFormat.parse(addressFrom.getTime()).getTime()));
         } catch (ParseException e) {
-            LOGGER.error("Could not parse date - {}", addressLineFrom.getTime());
+            LOGGER.error("Could not parse date - {}", addressFrom.getTime());
         }
-        truckDelivery.setZipcodeFrom(addressLineFrom.getZipcode());
+        truckDelivery.setZipcodeFrom(addressFrom.getZipcode());
     }
 
     /**
      * Set information to entity
      *
-     * @param addressLineTo information about where to deliver cargo
+     * @param addressTo information about where to deliver cargo
      * @param truckDelivery entity class
      */
-    private void saveInformationTo(AddressLine addressLineTo, TruckDelivery truckDelivery) {
-        truckDelivery.setAddressTo(addressLineTo.getAddress());
-        truckDelivery.setCityTo(addressLineTo.getCity());
-        truckDelivery.setStateTo(addressLineTo.getState());
-        truckDelivery.setCompanyTo(addressLineTo.getCompany());
+    private void saveInformationTo(AddressLine addressTo, TruckDelivery truckDelivery) {
+        truckDelivery.setAddressTo(addressTo.getAddress());
+        truckDelivery.setCityTo(addressTo.getCity());
+        truckDelivery.setStateTo(addressTo.getState());
+        truckDelivery.setCompanyTo(addressTo.getCompany());
         try {
-            truckDelivery.setTimeTo(new Timestamp(dateFormat.parse(addressLineTo.getTime()).getTime()));
+            truckDelivery.setTimeTo(new Timestamp(dateFormat.parse(addressTo.getTime()).getTime()));
         } catch (ParseException e) {
-            LOGGER.error("Could not parse date - {}", addressLineTo.getTime());
+            LOGGER.error("Could not parse date - {}", addressTo.getTime());
         }
-        truckDelivery.setZipcodeTo(addressLineTo.getZipcode());
+        truckDelivery.setZipcodeTo(addressTo.getZipcode());
     }
 
     /**
@@ -196,9 +196,7 @@ public class TruckDeliveryService {
         truckDelivery.setBrokerName(broker.getBrokerName());
         truckDelivery.setBrokerCompany(broker.getBrokerCompany());
         truckDelivery.setBrokerPhone(broker.getBrokerPhone());
-        if (broker.getBrokerPhoneExtension() != null) {
-            truckDelivery.setBrokerPhoneExtension(broker.getBrokerPhoneExtension());
-        }
+        truckDelivery.setBrokerPhoneExtension(broker.getBrokerPhoneExtension());
     }
 
     /**
@@ -234,12 +232,11 @@ public class TruckDeliveryService {
      * @return driver entity
      */
     private Driver saveDriverInformation(DriverInfo driverInfo) {
-        var driver = driverService.findDriverByDisplayNameAndContactPhone(driverInfo.getName(), driverInfo.getPhone());
+        var driver = driverService.findDriverByContactPhone(driverInfo.getPhone());
         if (driver == null) {
             LOGGER.info("Driver wasn't found driverName - {}", driverInfo.getName());
             Driver driverEntity = new Driver();
             driverEntity.setAccount(getAccount());
-            driverEntity.setLogin(driverInfo.getLogin());
             driverEntity.setMobile(true);
             driverEntity.setDisplayName(driverInfo.getName());
             driverEntity.setContactPhone(driverInfo.getPhone());

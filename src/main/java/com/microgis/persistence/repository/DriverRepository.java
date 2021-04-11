@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface DriverRepository extends JpaRepository<Driver, Integer> {
 
-    Optional<Driver> findDriverByDisplayNameAndContactPhone(@Param("displayName") String displayName,
-                                                            @Param("contactPhone") String contactPhone);
+    Optional<Driver> findDriverByContactPhone(@Param("contactPhone") String contactPhone);
 
 }

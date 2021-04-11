@@ -45,8 +45,7 @@ public class LoginController {
      * @return jwt token
      */
     @PostMapping(path = "/login")
-    public JwtResponse getToken(@RequestBody LoginRequest loginRequest,
-                                HttpServletRequest httpServletRequest) {
+    public JwtResponse getToken(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
         UserDetails userDetails;
         String domain = loginRequest.getDomain();
         String email = loginRequest.getEmail();
