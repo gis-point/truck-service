@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class DeliveryController {
      */
     @PostMapping("/deliveryInfo")
     public ResponseEntity<Object> createDeliveryInfo(Authentication authentication,
-                                                     @RequestBody TruckDeliveryInfo truckDeliveryInfo) {
+                                                     @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Get delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
         LOGGER.info("Delivery information processed");
@@ -55,7 +56,7 @@ public class DeliveryController {
      */
     @PutMapping("/deliveryInfo")
     public ResponseEntity<Object> updateDeliveryInfo(Authentication authentication,
-                                                     @RequestBody TruckDeliveryInfo truckDeliveryInfo) {
+                                                     @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Updating delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
         LOGGER.info("Delivery information updated");

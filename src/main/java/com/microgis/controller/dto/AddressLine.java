@@ -1,5 +1,6 @@
 package com.microgis.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public class AddressLine {
      * address where from/to deliver
      */
     @NotNull
+    @JsonProperty("other")
     private String address;
 
     /**
