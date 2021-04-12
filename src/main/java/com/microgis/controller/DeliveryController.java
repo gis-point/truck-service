@@ -42,9 +42,9 @@ public class DeliveryController {
     @PostMapping("/deliveryInfo")
     public ResponseEntity<Object> createDeliveryInfo(Authentication authentication,
                                                      @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
-        LOGGER.info("Get delivery information - {}", truckDeliveryInfo);
+        LOGGER.info("Create delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
-        LOGGER.info("Delivery information processed");
+        LOGGER.info("Delivery information created");
         return ResponseEntity.ok().build();
     }
 

@@ -151,8 +151,8 @@ public class TruckDeliveryService {
     /**
      * Set information to entity
      *
-     * @param addressFrom information about where from deliver cargo
-     * @param truckDelivery   entity class
+     * @param addressFrom   information about where from deliver cargo
+     * @param truckDelivery entity class
      */
     private void saveInformationFrom(AddressLine addressFrom, TruckDelivery truckDelivery) {
         truckDelivery.setAddressFrom(addressFrom.getAddress());
@@ -170,7 +170,7 @@ public class TruckDeliveryService {
     /**
      * Set information to entity
      *
-     * @param addressTo information about where to deliver cargo
+     * @param addressTo     information about where to deliver cargo
      * @param truckDelivery entity class
      */
     private void saveInformationTo(AddressLine addressTo, TruckDelivery truckDelivery) {
@@ -242,9 +242,8 @@ public class TruckDeliveryService {
             driverEntity.setDisplayName(driverInfo.getName());
             driverEntity.setContactPhone(driverInfo.getPhone());
             driverEntity.setDriverCode("TRUCK_DRIVER");
-            if (driverInfo.getEmail() != null) {
-                driverEntity.setContactEmail(driverInfo.getEmail());
-            }
+            driverEntity.setContactEmail(driverInfo.getEmail());
+            driverEntity.setLogin(driverInfo.getEmail());
             driverService.save(driverEntity);
             return driverEntity;
         }
