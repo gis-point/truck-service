@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,9 @@ public class DeliveryController {
      */
     @PostMapping("/deliveryInfo")
     public ResponseEntity<Object> createDeliveryInfo(Authentication authentication,
-                                                     @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
-        LOGGER.info("Create delivery information - {}", truckDeliveryInfo);
+                                                     @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo,
+                                                     HttpServletRequest httpServletRequest) {
+        LOGGER.info("Create delivery information - {}, host - {}", truckDeliveryInfo, httpServletRequest.getRemoteHost());
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
         return ResponseEntity.ok().build();
     }
@@ -55,8 +57,9 @@ public class DeliveryController {
      */
     @PutMapping("/deliveryInfo")
     public ResponseEntity<Object> updateDeliveryInfo(Authentication authentication,
-                                                     @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
-        LOGGER.info("Updating delivery information - {}", truckDeliveryInfo);
+                                                     @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo,
+                                                     HttpServletRequest httpServletRequest) {
+        LOGGER.info("Updating delivery information - {}, host - {}", truckDeliveryInfo, httpServletRequest.getRemoteHost());
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
         return ResponseEntity.ok().build();
     }
