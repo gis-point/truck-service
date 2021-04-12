@@ -59,7 +59,8 @@ public class TruckDeliveryService {
         saveBrokerInfo(truckDeliveryInfo.getBroker(), truckDelivery);
         saveInformationFrom(truckDeliveryInfo.getAddressFrom(), truckDelivery);
         saveInformationTo(truckDeliveryInfo.getAddressTo(), truckDelivery);
-        truckDeliveryRepository.save(truckDelivery);
+        var delivery = truckDeliveryRepository.saveAndFlush(truckDelivery);
+        LOGGER.info("Delivery information created/updated - {}", delivery.getId());
     }
 
     /**

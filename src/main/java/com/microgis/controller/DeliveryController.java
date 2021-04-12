@@ -44,7 +44,6 @@ public class DeliveryController {
                                                      @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Create delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
-        LOGGER.info("Delivery information created");
         return ResponseEntity.ok().build();
     }
 
@@ -59,7 +58,6 @@ public class DeliveryController {
                                                      @RequestBody @Valid TruckDeliveryInfo truckDeliveryInfo) {
         LOGGER.info("Updating delivery information - {}", truckDeliveryInfo);
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
-        LOGGER.info("Delivery information updated");
         return ResponseEntity.ok().build();
     }
 
