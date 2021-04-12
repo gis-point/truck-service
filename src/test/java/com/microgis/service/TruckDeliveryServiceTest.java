@@ -39,6 +39,8 @@ class TruckDeliveryServiceTest {
     @Test
     void testSaveOrUpdateDeliveryInformation() {
         //given
+        TruckDelivery delivery = new TruckDelivery();
+        delivery.setId(1);
         var truckDeliveryInfo = TruckServiceTestFixtures.createTruckDeliveryInfo();
         when(truckDeliveryRepository.findTruckDeliveryByVoloId(truckDeliveryInfo.getId()))
                 .thenReturn(Optional.empty());
@@ -47,12 +49,13 @@ class TruckDeliveryServiceTest {
         when(driverService.findDriverByContactPhone(truckDeliveryInfo.getDriver().getPhone()))
                 .thenReturn(null);
         when(accountRepository.getOne(1)).thenReturn(TruckServiceTestFixtures.createAccountLightweight());
+        when(truckDeliveryRepository.saveAndFlush(any(TruckDelivery.class))).thenReturn(delivery);
 
         //when
         truckDeliveryService.saveOrUpdateDeliveryInformation(truckDeliveryInfo);
 
         //then
-        verify(truckDeliveryRepository, times(1)).save(any(TruckDelivery.class));
+        verify(truckDeliveryRepository, times(1)).saveAndFlush(any(TruckDelivery.class));
         verify(driverService, times(1)).save(any(Driver.class));
         verify(deviceService, times(1)).save(any(DeviceLightweight.class));
     }
